@@ -5,6 +5,7 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.core.Configurable;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by admin on 14.04.2017.
@@ -21,7 +26,7 @@ public class TestServlet extends HttpServlet {
 
     private Configuration cfg = new Configuration(Configuration.VERSION_2_3_26);
     private ToDoList list = new ToDoList();
-    {list.add("");
+    {//list.add("");
     try{
         cfg.setTemplateLoader(new FileTemplateLoader(new File(".")));
     } catch (IOException e) {
@@ -33,21 +38,34 @@ public class TestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String what=req.getParameter("task");
-        list.add(what);
+        try {
+            list.add(what);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         resp.sendRedirect("/");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Template t = cfg.getTemplate("todo.html");
-        StringBuilder buf= new StringBuilder();
+        resp.setCharacterEncoding("UTF-8");
+        try {
+            Template t = cfg.getTemplate("todo.html");
+            Map<String, Object> map = new HashMap<>();
+            map.put("tasks", list.view());
+            t.process(map, resp.getWriter());
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(500);
+        }
+        /*StringBuilder buf= new StringBuilder();
         List<Smth> items = list.view();
         for (Smth item : items) {
             buf.append("<li>"+item.what+"</li>\n");
-        }
+        }*/
 
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write("<html>\n" +
+
+        /*resp.getWriter().write("<html>\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <title>Список дел</title>\n" +
@@ -63,7 +81,8 @@ public class TestServlet extends HttpServlet {
                 "</body>\n" +
                 "\n" +
                 "</head>\n" +
-                "</html>");
+                "</html>");*/
+
     }
 
 
