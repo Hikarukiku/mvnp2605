@@ -37,11 +37,21 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String what=req.getParameter("task");
+        String uri=req.getRequestURI();
+        if(uri.equals("/add"))
+        {String what=req.getParameter("task");
         try {
             list.add(what);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        } else if(uri.equals("/delete")){
+            try{
+                String id=req.getParameter("id");
+                list.delete(Integer.parseInt(id));
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         resp.sendRedirect("/");
     }

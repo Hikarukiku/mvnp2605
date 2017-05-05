@@ -9,7 +9,18 @@
 </form>
 <ol>
     <#list tasks as task>
-        <li>${task.what}</li>
+    <!--create table todo(
+    id int identity,
+    text varchar(100)
+    )-->
+
+    <li>
+        <form method="post" action="delete">
+            ${task.what}
+            <input type="submit" value="удалить">
+            <input name="id" type="hidden" value="${task.id}">
+        </form>
+    </li>
     </#list>
 </ol>
 

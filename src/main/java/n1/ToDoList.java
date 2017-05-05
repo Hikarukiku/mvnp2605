@@ -33,11 +33,19 @@ public class ToDoList {
         }
     }
 
-    void delete(int id){
+    /*void delete(int id){
         for (Smth l1: list
                 ) { if(l1.getId()==id){list.remove(l1);
             break;}
 
+        }
+    }*/
+    void delete(int id) throws SQLException {
+        try (Connection c = DriverManager.getConnection(JDBC_H2_TEST)){
+            try(PreparedStatement ps = c.prepareStatement("delete from todo where id=?")){
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
         }
     }
 
