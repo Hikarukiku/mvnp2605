@@ -3,6 +3,7 @@ package n1;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.core.Configurable;
+import freemarker.core.HTMLOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -18,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+/**
+ * org.h2.tools.Console
+ */
 
 /**
  * Created by admin on 14.04.2017.
@@ -29,6 +33,7 @@ public class TestServlet extends HttpServlet {
     {//list.add("");
     try{
         cfg.setTemplateLoader(new FileTemplateLoader(new File(".")));
+        cfg.setOutputFormat(HTMLOutputFormat.INSTANCE);
     } catch (IOException e) {
         e.printStackTrace();
     }
