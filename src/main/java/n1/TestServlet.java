@@ -21,6 +21,10 @@ import java.util.Map;
 import java.util.Objects;
 /**
  * org.h2.tools.Console
+ *
+ * create table todo(
+ id int identity,
+ text varchar(100))
  */
 
 /**
